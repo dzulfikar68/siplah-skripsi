@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>k-means results - siplah</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  	<link rel="stylesheet" type="text/css" href="./siplah.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<br>
+	<div class="container">
+		<div class="row" style="border: 1px solid grey">
+			<div class="col-sm-3"></div>
+			<div class="col-sm-6" style="text-align: center;">
+					<h3>kelompok: <strong>
+					{% for name in name_final[iterasi|int - 1] %}
+					{{ name }}
+					{% if not loop.last %}
+        			|
+					{% endif %}
+					{% endfor %}
+					</strong></h3>
+				<p><i>untuk query: <strong>{{ que }}</strong></i></p>
+			</div>
+		</div>
+		<div>{{ count }}</div>
+		<br>
+		<br>
+		<div class="row">
+			<div class="col-sm-3"></div>
+			<div class="col-sm-6">
+				{% for key, value in var.iteritems() %}
+					{% if (value|int == iterasi|int) %}
+						<p style="text-align: center;">
+							<h3 style=" overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; " >
+								<a href="/static/uploads/{{ container.query.filter_by(id=key).first().file }}" target="_blank">{{ container.query.filter_by(id=key).first().judul }}</a>
+							</h3>
+							<div maxlength="50" align="justify" style=" overflow: hidden; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; ">{{ container.query.filter_by(id=key).first().isi }}</div>
+						</p>
+					{% endif %}
+				{% endfor %}
+				<br>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

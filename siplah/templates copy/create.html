@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>create doc - siplah</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">  	
+  	<link rel="stylesheet" type="text/css" href="./siplah.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<br>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-3">
+				<br>
+				<a href="http://localhost:5000/admin">back</a>
+			</div>
+			<div class="col-sm-9"></div>
+		</div>
+		<div class="row">
+			<div class="col-sm-3"></div>
+			<div class="col-sm-6">
+				<h3>Tambah Artikel</h3>
+				<br>
+
+				<form action="{{ url_for('create') }}" method="post" enctype="multipart/form-data">
+					<div class="form-group">
+						<label>ID</label>
+						<input type="text" name="id" maxlength="8" class="form-control">
+					</div>
+					<div class="form-group">
+						<label>Judul Artikel</label>
+						<input type="text" name="judul" maxlength="200" class="form-control">
+					</div>
+					<div class="form-group">
+						<label>Kata Kunci</label>
+						<div class="row">
+							<span class="col-sm-4">
+								<input type="text" name="kunci1" maxlength="20" class="form-control">
+							</span>
+							<span class="col-sm-4">
+								<input type="text" name="kunci2" maxlength="20" class="form-control">
+							</span>
+							<span class="col-sm-4">
+								<input type="text" name="kunci3" maxlength="20" class="form-control">
+							</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label >Isi</label>
+						<textarea rows="10" name="isi" class="form-control"></textarea> 
+					</div>
+					<div class="form-group">
+						<label>File Upload</label>
+						<input type="file" name="file">
+					</div>
+					<input class="btn btn-success" type="submit" value="Submit">
+				</form>
+				<br><br><br>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

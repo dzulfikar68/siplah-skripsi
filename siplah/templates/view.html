@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="icon" href="static/s.jpg">
+	<title>view doc - siplah</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<style>
+	body {
+		background-color: #f9f9f9;
+	}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header col-sm-4">
+				<a style="font-family: courier; font-size: 150%;" class="navbar-brand" onclick="self.close()" href="#"><strong><i>[SIPLAH]</i></strong><small style="font-size: 50%;"><i>admin</i></small></a>
+			</div>
+		</div>
+	</nav>
+
+	<br><br><br><br><br>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-3"></div>
+			<div class="col-sm-6">
+				
+				<div class="row">
+					<div class="col-sm-12">
+						<h3 align="center"><strong>View Article</strong></h3>
+					</div>
+				</div>
+				<br>
+				<div class="well">
+					<div class="form-group">
+						<label>ID :</label>
+						<p><strong><i><u>{{artikel.id}}</u></i></strong></p>
+					</div>
+					<div class="form-group">
+						<label>Title :</label>
+						<p><i>{{artikel.judul}}</i></p>
+					</div>
+					<div class="form-group">
+						<label>Keywords :</label>
+						<div class="row">
+							<span class="col-sm-4">
+								<span class="badge"><i>{{artikel.kunci1}}</i></span>
+							</span>
+							<span class="col-sm-4">
+								<span class="badge"><i>{{artikel.kunci2}}</i></span>
+							</span>
+							<span class="col-sm-4">
+								<span class="badge"><i>{{artikel.kunci3}}</i></span>
+							</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label>Content :</label>
+						<textarea rows="10" name="isi" class="form-control">{{artikel.isi}}</textarea> 
+					</div>
+					<div class="form-group">
+						<label>File PDF :</label>
+						<iframe src="/static/uploads/{{artikel.file}}" width="100%" height="500">
+
+						</iframe>
+					</div>
+					<input type="button" class="btn btn-default" value="Cancel" onclick="self.close()">
+					<a href="http://localhost:5000/edit/{{artikel.id}}" class="btn btn-info" role="button">Edit</a>
+				</div>
+				<br><br><br>
+
+				<br><br><br>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

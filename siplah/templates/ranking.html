@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="icon" href="static/s.jpg">
+	<title>search results - siplah</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="static/tabel.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<style>
+	body {
+		background-image: url("static/wall_white.jpg");
+	}
+</style>
+<style>
+.scrolling {
+	width: 80px;
+	height: 40px;
+	position: fixed;
+	bottom: 50px;
+	right: 50px;
+	display: none;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 40px;
+	border-radius: 10px;
+	background-color: green; /* Set a background color */
+	color: white; /* Text color */
+}
+
+/* Note: Try to remove the following lines to see the effect of CSS positioning */
+.affix {
+	top: 20px;
+	z-index: 9999 !important;
+	margin-top: 40px;
+	max-width: 225px;
+}
+
+/* The progress container (grey background) */
+.progress-container {
+	width: 100%;
+	height: 8px;
+	background: #ccc;
+}
+
+/* The progress bar (scroll indicator) */
+.progress-bar {
+	height: 8px;
+	background: #4caf50;
+	width: 0%;
+}
+.filterDiv {
+	display: none; /* Hidden by default */
+}
+
+.container {
+	overflow: hidden;
+}
+.show {
+	display: block;
+}
+</style>
+<script>
+	window.onload = function () {
+
+		var chart = new CanvasJS.Chart("chartContainer", {
+			animationEnabled: true,
+
+			title:{
+				text:""
+			},
+			axisX:{
+				interval: 1
+			},
+			axisY2:{
+				interlacedColor: "rgba(1,77,101,.2)",
+				gridColor: "rgba(1,77,101,.1)",
+				title: ""
+			},
+			height:{{ jumlah * 20 }},
+			data: [{
+				type: "bar",
+				name: "companies",
+				axisYType: "secondary",
+				color: "#014D65",
+				dataPoints: [
+				{% for rank in ranking %}
+				{ y: {{ rank }}, label: "Doc-{{ loop.index }}" },
+				{% endfor %}
+				]
+			}]
+		});
+		chart.render();
+
+		var chart2 = new CanvasJS.Chart("chartContainer2", {
+			animationEnabled: true,
+
+			title:{
+				text:""
+			},
+			axisX:{
+				interval: 1
+			},
+			axisY2:{
+				interlacedColor: "rgba(1,77,101,.2)",
+				gridColor: "rgba(1,77,101,.1)",
+				title: ""
+			},
+			height:{{ rank * 20 }},
+			data: [{
+				type: "bar",
+				name: "companies",
+				axisYType: "secondary",
+				color: "#014D65",
+				dataPoints: [
+				{% for i, view in view_ranking.iteritems()|reverse %}
+					// { y: {{ i }}, label: "Doc-{{ loop.index }}" },
+					{ y: {{ i }}, label: "ID:{{ view }}" },
+					{% endfor %}
+					]
+				}]
+			});
+		chart2.render();
+
+		var chart3 = new CanvasJS.Chart("chartContainer3", {
+			exportEnabled: true,
+			animationEnabled: true,
+			title:{
+				text: ""
+			},
+			legend:{
+				cursor: "pointer",
+				itemclick: explodePie
+			},
+			data: [{
+				type: "pie",
+				showInLegend: true,
+				toolTipContent: "{name}: <strong>{y}%</strong>",
+				indexLabel: "{name} - {y}%",
+				dataPoints: [
+				{% for group in chart_group %}
+				{ y: {{ '%0.0f' % ((group / sum_chart) * 100)|float }}, name: "Group-{{ loop.index }}" },
+				{% endfor %}
+				]
+			}]
+		});
+		chart3.render();
+	}
+
+	function explodePie (e) {
+		if(typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
+			e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
+		} else {
+			e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
+		}
+		e.chart3.render();
+	}
+</script>
+<script language="javascript"> 
+	function toggle() {
+		var ele1 = document.getElementById("toggleText1");
+		var ele2 = document.getElementById("toggleText2");
+		var text = document.getElementById("displayText");
+		if(ele1.style.display == "block") {
+			ele1.style.display = "none";
+			ele2.style.display = "block";
+			text.innerHTML = "Process Details";
+		}
+		else {
+			ele1.style.display = "block";
+			ele2.style.display = "none";
+			text.innerHTML = "Search Results";
+		}
+	} 
+</script>
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header col-sm-4" style="margin-right: 60px">
+				<a style="font-family: courier; font-size: 150%;" class="navbar-brand" href="http://localhost:5000/"><strong><i>[SIPLAH]</i></strong></a>
+			</div>
+			<form style="margin-left: 60px;" action="{{ url_for('ranking') }}" method="post" class="navbar-form navbar-left">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="Search" name="query" value="{{ query_req }}">
+					<div class="input-group-btn">
+						<button data-toggle="collapse" data-target="#loader" class="btn btn-default" type="submit">
+							<i class="glyphicon glyphicon-search"></i>
+						</button>
+					</div>
+				</div>
+			</form>
+			<ul class="nav navbar-nav navbar-right" style="margin-right: 5px;">
+				<!-- <button class="btn btn-info navbar-btn btn-sm" class="scrollup" data-toggle="collapse" data-target="#demo">Process Details</button> -->
+				{% if 'username' in session %}
+				<li><a href="http://localhost:5000/admin"><span class="glyphicon glyphicon-list"></span> Article</a></li>
+				{% endif %}
+				{% if 'username' in session %}
+				<li><a href="#" data-href="http://localhost:5000/logout" data-toggle="modal" data-target="#confirm-logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+				{% else %}
+				<li><a href="#" data-toggle="modal" data-target="#myLogin"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+				{% endif %}
+				<a class="btn btn-info navbar-btn btn-sm" class="scrollup" id="displayText" href="javascript:toggle();">Process Details</a>
+			</ul>
+		</div>
+		<div class="progress-container">
+			<div class="progress-bar" id="myBar"></div>
+		</div> 
+	</nav>
+
+	<div class="container-fluid" style="height:1px;">
+
+	</div>
+
+	<br><br><br><br><br>
+
+	<div class="container">
+		<div class="row">
+			<nav class="col-sm-3">
+
+				<div class="panel panel-primary">
+
+					<div class="panel-heading">
+						<strong>Group Results: <span class="badge">{{ sum_kel }} groups</span></strong>
+					</div>
+					<div class="panel-body">
+						<ul class="nav nav-pills nav-stacked custom" id="menu_area" data-spy="affix" data-offset-top="205">
+							<li style="text-align: center;">
+								<a href="#" data-toggle="tab" id="menu_text" class="scrollup" onclick="filterSelection('all')" name="category">
+									<i>
+										<strong>All rank results</strong>
+									</i>
+									<span class="badge">{{ rank }}</span>
+								</a>
+							</li>
+							{% for name in name_final %}
+							<li style="text-align: center;">
+								<a href="#{{ loop.index }}" data-toggle="tab" id="menu_text" class="scrollup" onclick="filterSelection('{{ loop.index }}')" name="category">
+									<i>
+										Group-{{ loop.index }}: 
+										<strong>{% for n in name %}
+											{{ n }}
+											{% if not loop.last %}
+											|
+											{% endif %}
+										{% endfor %}</strong>
+									</i>
+									<span class="badge">{{chart_group[loop.index - 1]}}</span>
+								</a>
+							</li>
+							{% endfor %}
+						</ul>
+					</div>
+
+				</div>
+
+			</nav>
+			<div class="col-sm-7">
+				<div class="alert alert-info" style="text-align: center; font-size: 100%;">
+					<strong>Rank Results:</strong> <i><strong>{{ rank }}</strong> of <strong>{{ jumlah }}</strong> article ({{ '%0.2f' % (time/60)|float }} minutes) </i>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-5" style="margin-right: 25px;"></div>
+					<div id="loader" class="collapse">
+						<img src="static/spin.gif" alt="">
+					</div>
+				</div>
+
+				<br>
+
+				<div id="toggleText1" style="display: none">
+					<div class="well">
+						<div align="center" class="col-sm-12">
+							<h3><strong>Process Details</strong></h3>
+						</div>
+						<!-- 
+						<div class="col-sm-2">
+							<button class="btn btn-danger navbar-btn btn-sm" class="scrollup" id="displayText" href="javascript:toggle();">Close</button>
+						</div> 
+					-->
+
+					<div class="col-sm-12">
+						<br>
+						<p style="font-size: 125%;"><strong><u>Query:</u></strong></p>
+						{% for q in query %}
+						<div><span class="badge"><i>
+							{{ loop.index }}<span>. </span>{{ q }}<br>
+						</i></span></div>
+						{% endfor %}
+						<br>
+					</div>
+
+					<ul class="nav nav-tabs">
+						<li class="active"><a data-toggle="tab" href="#frek"><strong>Frequency of Word</strong></a></li>
+						<li><a data-toggle="tab" href="#bobot"><strong>Weighted of Word</strong></a></li>
+						<li><a data-toggle="tab" href="#vsm"><strong>Rank Results</strong></a></li>
+						<li><a data-toggle="tab" href="#kmeans"><strong>Group Results</strong></a></li>
+					</ul>
+
+					<div class="tab-content">
+						<div id="frek" class="tab-pane fade in active">
+
+							<!-- <br><br> -->
+
+							<!-- <h2 style="text-align: center">Frequency of Word</h2> -->
+
+							<br><br>
+
+							<p style="text-align: center; font-size: 125%;"><strong><u>Glossary collection</u></strong></p>
+							<p align="right">
+								<span class="badge">
+									<i>swipe to right </i><span class="glyphicon glyphicon-chevron-right"></span>
+								</span> 
+							</p>
+
+							<div class="outer">
+								<div class="inner">
+									<table>
+										<tr style="background-color: grey;">
+											<th style="color: white; background-color: grey;"><i>Word :</i></th>
+											{% for koleksi in koleksi %}
+											<td style="color: white;"><i>{{ koleksi }}</i></td>
+											{% endfor %}
+										</tr>
+									</table>
+								</div>
+							</div>
+
+							<br><br><br>
+
+							<p style="text-align: center; font-size: 125%;"><strong><u>Word frequency on query</u></strong></p>
+							<p align="right">
+								<span class="badge">
+									<i>swipe to right </i><span class="glyphicon glyphicon-chevron-right"></span>
+								</span> 
+							</p>
+
+							<div class="outer">
+								<div class="inner">
+									<table>
+										<tr style="background-color: grey;">
+											<th style="color: white; background-color: grey;"><i>Word :</i></th>
+											{% for q in query %}
+											<td style="color: white;"><strong><i>{{ q }}</i></strong></td>
+											{% endfor %}
+										</tr>
+										<tr>
+											<th><i>Frequency :</i></th>
+											{% for doc in bobot_q %}
+											{% if doc != 0 %}
+											<td><i>{{ doc }}</i></td>
+											{% endif %}
+											{% endfor %}
+										</tr>
+									</table>
+								</div>
+							</div>
+
+							<br><br><br>
+
+							<p style="text-align: center; font-size: 125%;"><strong><u>Word frequency on documents</u></strong></p>
+							<p align="right">
+								<span class="badge">
+									<i>swipe to right </i><span class="glyphicon glyphicon-chevron-right"></span>
+								</span> 
+							</p>
+
+							<div class="outer">
+								<div class="inner">
+									<table>
+										<tr style="background-color: grey;">
+											<th style="color: white; background-color: grey;"><i>Word :</i></th>
+											{% for koleksi in koleksi %}
+											<td style="color: white;"><strong><i>{{ koleksi }}</i></strong></td>
+											{% endfor %}
+										</tr>
+										{% for bobot_doc in bobot_doc %}
+										<tr>
+											<th><i>Doc to: {{ loop.index }}</i></th>
+											{% for doc in bobot_doc %}
+											<td><i>{{ doc }}</i></td>
+											{% endfor %}
+										</tr>
+										{% endfor %}
+									</table>
+								</div>
+							</div>
+
+						</div>
+
+						<div id="bobot" class="tab-pane fade">
+
+							<!-- <br><br> -->
+
+							<!-- <h2 style="text-align: center">Weighted of Word</h2> -->
+
+							<br><br>
+
+							<p style="text-align: center; font-size: 125%;"><strong><u>IDF weight</u></strong></p>
+							<p align="right">
+								<span class="badge">
+									<i>swipe to right </i><span class="glyphicon glyphicon-chevron-right"></span>
+								</span> 
+							</p>
+
+							<div class="outer">
+								<div class="inner">
+									<table>
+										<tr style="background-color: grey;">
+											<th style="color: white; background-color: grey;"><i>Word :</i></th>
+											{% for koleksi in koleksi %}
+											<td style="color: white;"><strong><i>{{ koleksi }}</i></strong></td>
+											{% endfor %}
+										</tr>
+										<tr>
+											<th><i>IDF :</i></th>
+											{% for doc in bobot_kata %}
+											<td><i>{{ '%0.5f' % doc|float }}</i></td>
+											{% endfor %}
+										</tr>
+									</table>
+								</div>
+							</div>
+
+							<br><br><br>
+
+							<p style="text-align: center; font-size: 125%;"><strong><u>Weight of word on query</u></strong></p>
+							<p align="right">
+								<span class="badge">
+									<i>swipe to right </i><span class="glyphicon glyphicon-chevron-right"></span>
+								</span> 
+							</p>
+
+							<div class="outer">
+								<div class="inner">
+									<table>
+										<tr style="background-color: grey;">
+											<th style="color: white; background-color: grey;"><i>Word :</i></th>
+											{% for q in query %}
+											<td style="color: white;"><strong><i>{{ q }}</i></strong></td>
+											{% endfor %}
+										</tr>
+										<tr>
+											<th><i>Weight :</i></th>
+											{% for doc in bobot_kata_q %}
+											{% if doc != 0 %}
+											<td><i>{{ '%0.5f' % doc|float }}</i></td>
+											{% endif %}
+											{% endfor %}
+										</tr>
+									</table>
+								</div>
+							</div>
+
+							<br><br><br>
+
+							<p style="text-align: center; font-size: 125%;"><strong><u>Weight of words on the document</u></strong></p>
+							<p align="right">
+								<span class="badge">
+									<i>swipe to right </i><span class="glyphicon glyphicon-chevron-right"></span>
+								</span> 
+							</p>
+
+							<div class="outer">
+								<div class="inner">
+									<table>
+										<tr style="background-color: grey;">
+											<th style="color: white; background-color: grey;"><i>Word :</i></th>
+											{% for koleksi in koleksi %}
+											<td style="color: white;"><strong><i>{{ koleksi }}</i></strong></td>
+											{% endfor %}
+										</tr>
+										{% for dokumen in bobot_kata_doc %}
+										<tr>
+											<th><i>Doc to: {{ loop.index }}</i></th>
+											{% for doc in dokumen %}
+											<td><i>{{ '%0.5f' % doc|float }}</i></td>
+											{% endfor %}
+										</tr>
+										{% endfor %}
+									</table>
+								</div>
+							</div>
+
+						</div>
+
+						<div id="vsm" class="tab-pane fade">
+
+							<!-- <br><br> -->
+
+							<!-- <h2 style="text-align: center">Rank Results</h2> -->
+
+							<br><br>
+
+							<p style="text-align: center; font-size: 125%;"><strong><u>Retrieve ratings results</u></strong></p>
+							<p align="right">
+								<span class="badge">
+									<i>swipe to right </i><span class="glyphicon glyphicon-chevron-right"></span>
+								</span> 
+							</p>
+
+							<div class="outer">
+								<div class="inner">
+									<table>
+										<tr style="background-color: grey;">
+											<th style="color: white; background-color: grey;"><i>ID Doc :</i></th>
+											{% for i, view in view_ranking.iteritems() %}
+											<td style="color: white;"><strong><i>{{ view }}</i></strong></td>
+											{% endfor %}
+										</tr>
+										<tr>
+											<th><i>VSM Value :</i></th>
+											{% for i, view in view_ranking.iteritems() %}
+											<td><i>{{ '%0.5f' % i|float }}</i></td>
+											{% endfor %}
+										</tr>
+										<tr>
+											<th><i>Rank :</i></th>
+											{% for i, view in view_ranking.iteritems() %}
+											<td><strong><i>{{ loop.index }}</i></strong></td>
+											{% endfor %}
+										</tr>
+									</table>
+								</div>
+							</div>
+
+							<br><br><br>
+
+							<p style="text-align: center; font-size: 125%;"><strong><u>VSM value results for each retrieve document</u></strong></p>
+
+							<div id="chartContainer2" style="height: {{ rank * 20 }}px; width: 100%;"></div>
+							<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+							<br><br><br><br><br><br><br>
+
+							<p style="text-align: center; font-size: 125%;"><strong><u>VSM value results of all documents</u></strong></p>
+
+							<div id="chartContainer" style="height: {{ jumlah * 20 }}px; width: 100%;"></div>
+							<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+							<br><br><br><br><br>
+
+						</div>
+
+						<div id="kmeans" class="tab-pane fade">
+
+							<!-- <br><br> -->
+
+							<!-- <h2 style="text-align: center">Group Results</h2> -->
+
+							<br><br>
+
+							<p style="text-align: center; font-size: 125%;"><strong><u>Centroid value for each iteration</u></strong></p>
+							<p align="right">
+								<span class="badge">
+									<i>swipe to right </i><span class="glyphicon glyphicon-chevron-right"></span>
+								</span> 
+							</p>
+
+							<div class="outer">
+								<div class="inner">
+									<table>
+										<tr style="background-color: grey;">
+											<th style="color: white; background-color: grey;"><i>Centroid to:</i></th>
+											{% for x in range(sum_kel) %}
+											<td style="color: white;"><strong><i>{{ loop.index }}</i></strong></td>
+											{% endfor %}
+										</tr>
+										{% for seq in catatan_bobot %}
+										<tr>
+											<th><i>Iter to: {{ loop.index }}</i></th>
+											{% for centroid in seq %}
+											<td><i>{{ '%0.5f' % centroid|float }}</i></td>
+											{% endfor %}
+										</tr>
+										{% endfor %}
+									</table>
+								</div>
+							</div>
+
+							<br><br><br>
+
+							<p style="text-align: center; font-size: 125%;"><strong><u>Document positions in groups each iteration</u></strong></p>
+							<p align="right">
+								<span class="badge">
+									<i>swipe to right </i><span class="glyphicon glyphicon-chevron-right"></span>
+								</span> 
+							</p>
+
+							<div class="outer">
+								<div class="inner">
+									<table>
+										<tr style="background-color: grey;">
+											<th style="color: white; background-color: grey;"><i>Doc to:</i></th>
+											{% for i, view in view_ranking.iteritems() %}
+											<td style="color: white;"><strong><i>{{ loop.index }}</i></strong></td>
+											{% endfor %}
+										</tr>
+										{% for seq in catatan_grup %}
+										<tr>
+											<th><i>Iter to: {{ loop.index }}</i></th>
+											{% for nilai in seq %}
+											<td><i>
+												{% for n in nilai %}
+												{% if n == 1 %}
+												group-{{ loop.index }}
+												{% endif %}
+												{% endfor %}
+											</i></td>
+											{% endfor %}
+										</tr>
+										{% endfor %}
+									</table>
+								</div>
+							</div>
+
+							<br><br><br>
+
+							<p style="text-align: center; font-size: 125%;"><strong><u>Result grouping of documents</u></strong></p>
+							<p align="right">
+								<span class="badge">
+									<i>swipe to right </i><span class="glyphicon glyphicon-chevron-right"></span>
+								</span> 
+							</p>
+
+							<div class="outer">
+								<div class="inner">
+									<table>
+										<tr style="background-color: grey;">
+											<th style="color: white; background-color: grey;"><i>ID Doc :</i></th>
+											{% for i, view in final_result.iteritems() %}
+											<td style="color: white;"><strong><i>{{ i }}</i></strong></td>
+											{% endfor %}
+										</tr>
+										<tr>
+											<th><i>Group :</i></th>
+											{% for i, view in final_result.iteritems() %}
+											<td><i>{{ view }}</i></td>
+											{% endfor %}
+										</tr>
+									</table>
+								</div>
+							</div>
+
+							<br><br><br>
+
+							<p style="text-align: center; font-size: 125%;"><strong><u>Percentage grouping of documents</u></strong></p>
+
+							<div id="chartContainer3" style="height: 300px; width: 100%;"></div>
+							<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+							<br><br><br><br><br>
+
+						</div>
+					</div>
+
+					<br>
+				</div>
+			</div>
+
+			<div id="toggleText2">
+				<div class="well">
+					{% for i, view in view_ranking.iteritems() %}
+					<div class="filterDiv all 
+					{% for j, kel in final_result.iteritems() %}
+					{% if view == j%}
+					{{ kel }}
+					{% endif %}
+					{% endfor %}
+					">
+					<h3 style=" overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; "><a href="/static/uploads/{{ container.query.filter_by(id=view).first().file }}" target="_blank">{{ container.query.filter_by(id=view).first().judul }}</a></h3>
+					<div maxlength="50" align="justify" style=" overflow: hidden; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; ">
+					{{ container.query.filter_by(id=view).first().isi }}</div>
+					<div style="margin-top: 5px">
+						<strong><i><span class="badge">Rank #{{ loop.index }}</span></i></strong> | 
+						<strong><i>keywords: </i></strong>
+						<span class="badge"><i>{{ container.query.filter_by(id=view).first().kunci1 }}</i></span>
+						<span class="badge"><i>{{ container.query.filter_by(id=view).first().kunci2 }}</i></span>
+						<span class="badge"><i>{{ container.query.filter_by(id=view).first().kunci3 }}</i></span>
+					</div>
+					<br>
+				</div>
+				{% endfor %}
+			</div>
+			<br><br><br>
+		</div>
+	</div>
+
+	<br>
+
+	<!-- Modal Login-->
+	<div class="modal fade" id="myLogin" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title"><strong>Login</strong></h4>
+				</div>
+				<form action="http://localhost:5000/login" method="post">
+					<div class="modal-body">
+						<div>
+							<div class="form-group">
+								<label>Username:</label>
+								<input type="text" name="username" class="form-control">
+							</div>
+							<div class="form-group">
+								<label>Password:</label>
+								<input type="password" name="password" class="form-control">
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<input class="btn btn-success" type="submit" value="Login">
+					</div>
+				</form>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="modal fade" id="confirm-logout" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title"><strong>Logout</strong></h4>
+				</div>
+				<div class="modal-body">
+					Do you want to out of the session?
+				</div>
+				<div class="modal-footer">
+					<form action="http://localhost:5000/logout">
+						<button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+						<input class="btn btn-warning btn-ok" type="submit" value="Yes">
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="myModal" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title"><strong>Progress</strong></h4>
+				</div>
+				<div class="modal-body">
+
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+
+<a href="#" class="scrolling">On Top</a>
+
+<script>
+	filterSelection("all")
+	function filterSelection(c) {
+		var x, i;
+		x = document.getElementsByClassName("filterDiv");
+		if (c == "all") c = "";
+		for (i = 0; i < x.length; i++) {
+			w3RemoveClass(x[i], "show");
+			if (x[i].className.indexOf(c) > -1) w3AddClass(x[i], "show");
+		}
+	}
+
+	function w3AddClass(element, name) {
+		var i, arr1, arr2;
+		arr1 = element.className.split(" ");
+		arr2 = name.split(" ");
+		for (i = 0; i < arr2.length; i++) {
+			if (arr1.indexOf(arr2[i]) == -1) {element.className += " " + arr2[i];}
+		}
+	}
+
+	function w3RemoveClass(element, name) {
+		var i, arr1, arr2;
+		arr1 = element.className.split(" ");
+		arr2 = name.split(" ");
+		for (i = 0; i < arr2.length; i++) {
+			while (arr1.indexOf(arr2[i]) > -1) {
+				arr1.splice(arr1.indexOf(arr2[i]), 1);     
+			}
+		}
+		element.className = arr1.join(" ");
+	}
+</script>
+
+<script>
+	// When the user scrolls the page, execute myFunction 
+	window.onscroll = function() {myFunction()};
+
+	function myFunction() {
+		var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+		var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+		var scrolled = (winScroll / height) * 100;
+		document.getElementById("myBar").style.width = scrolled + "%";
+	}
+</script>
+
+<script>
+	$(document).ready(function () {
+
+		$('.scrollup').click(function () {
+			$("html, body").animate({
+				scrollTop: 0
+			}, 600);
+			return false;
+		});
+
+	});
+</script>
+
+<script>
+	$('#confirm-logout').on('show.bs.modal', function(e) {
+		$(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+	});
+</script>
+
+<script>
+	$(document).ready(function () {
+
+		$(window).scroll(function () {
+			if ($(this).scrollTop() > 100) {
+				$('.scrolling').fadeIn();
+			} else {
+				$('.scrolling').fadeOut();
+			}
+		});
+
+		$('.scrolling').click(function () {
+			$("html, body").animate({
+				scrollTop: 0
+			}, 600);
+			return false;
+		});
+
+	});
+</script>
+
+</body>
+</html>

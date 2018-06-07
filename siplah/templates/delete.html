@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="icon" href="static/s.jpg">
+	<title>delete doc - siplah</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<style>
+	body {
+		background-color: #f9f9f9;
+	}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header col-sm-4">
+				<a style="font-family: courier; font-size: 150%;" class="navbar-brand" href="http://localhost:5000/admin"><strong><i>[SIPLAH]</i></strong><small style="font-size: 50%;"><i>admin</i></small></a>
+			</div>
+		</div>
+	</nav>
+
+	<br><br><br><br><br>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-3"></div>
+			<div class="col-sm-6">
+				<div class="row">
+					<div class="col-sm-12">
+						<h3 align="center"><strong>Delete Article</strong></h3>
+					</div>
+				</div>
+				<br>
+				<div class="well" align="center">
+					<p><strong>Do you want to delete this article</strong> <i>({{ artikel.judul }})</i><strong> ?</strong></p>
+					<form action="http://localhost:5000/delete/{{artikel.id}}" method="post">
+						<a href="http://localhost:5000/admin" class="btn btn-default" role="button">No</a>
+						<input class="btn btn-danger btn-ok" type="submit" value="Yes">
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

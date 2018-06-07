@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="icon" href="static/s.jpg">
+	<title>login - siplah</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<style>
+		body {
+			background-image: url("static/back.png");
+		}
+	</style>
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+	  <div class="container-fluid">
+	    <div class="navbar-header col-sm-4">
+			<a style="font-family: courier; font-size: 150%;" class="navbar-brand" href="http://localhost:5000/"><strong><i>[SIPLAH]</i></strong></a>
+		</div>
+	  </div>
+	</nav>
+
+	<!-- beautifulsoup / bs4 : scrapping -->
+
+	<br><br><br><br><br>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-2"></div>
+			<div class="col-sm-8">
+				<div class="jumbotron">
+					<h1>Page Not Found</h1>
+				  	<p>What you were looking for is just not there.
+				  	<p><a href="{{ url_for('index') }}">go somewhere nice</a>
+				</div>				
+			</div>
+		</div>
+	</div>
+</body>
+</html>

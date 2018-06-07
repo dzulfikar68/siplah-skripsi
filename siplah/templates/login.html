@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="icon" href="static/s.jpg">
+	<title>login - siplah</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<style>
+		body {
+			background-image: url("static/back.png");
+		}
+	</style>
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+	  <div class="container-fluid">
+	    <div class="navbar-header col-sm-4">
+			<a style="font-family: courier; font-size: 150%;" class="navbar-brand" href="http://localhost:5000/"><strong><i>[SIPLAH]</i></strong></a>
+		</div>
+	  </div>
+	</nav>
+
+	<br><br><br><br><br>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-3"></div>
+			<div class="col-sm-4">
+				<h3 style="color: LightSkyBlue;"><strong>Login Admin</strong></h3>
+				<br>
+
+				{% if notif %}
+				<div class="alert alert-warning alert-dismissable fade in">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+				  <strong>Warning!</strong> {{ notif }}
+				</div>
+				{% endif %}
+				{% if danger %}
+				<div class="alert alert-danger alert-dismissable fade in">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+				  <strong>Danger!</strong> {{ danger }}
+				</div>
+				{% endif %}
+
+				<form action="http://localhost:5000/login" method="post">
+					<div class="form-group">
+						<label style="color: LightSkyBlue;">Username<span style="color: red;">*</span>:</label>
+						<input type="text" name="username" class="form-control" required>
+					</div>
+					<div class="form-group">
+						<label style="color: LightSkyBlue;">Password<span style="color: red;">*</span>:</label>
+						<input type="password" name="password" class="form-control" required>
+					</div>
+					<input class="btn btn-success" type="submit" value="Login">
+				</form>
+				
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+table {
+    table-layout: fixed;
+    width: 100%;
+    *margin-left: -100px; /*ie7*/
+}
+td, th {
+    vertical-align: top;
+    border-top: #ccc 1px solid;
+    padding: 10px;
+    width: 100px;
+}
+th {
+    position: absolute;
+    *position: relative; /*ie7*/
+    left: 0;
+    width: 100px;
+}
+.outer {
+    position: relative;
+}
+.inner {
+    overflow-x: scroll;
+    overflow-y: visible;
+    width: 400px;
+    margin-left: 100px;
+}

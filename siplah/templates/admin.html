@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="icon" href="static/s.jpg">
+	<title>all article - siplah</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+	<style>
+		body {
+			background-color: #f9f9f9;
+		}
+	</style>
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header col-sm-4">
+				<a style="font-family: courier; font-size: 150%;" class="navbar-brand" href="http://localhost:5000/admin"><strong><i>[SIPLAH]</i></strong><small style="font-size: 50%;"><i>admin</i></small></a>
+			</div>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="http://localhost:5000/"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+				<li><a href="#" data-href="http://localhost:5000/setting" data-toggle="modal" data-target="#confirm-setting"><span class="glyphicon glyphicon-cog"></span> Setting</a></li>
+				<li><a href="#" data-href="http://localhost:5000/logout" data-toggle="modal" data-target="#confirm-logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+			</ul>
+		</div>
+	</nav>
+
+	<br><br><br><br>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+				<h3 style="text-align: center;"><strong>All of Article</strong></h3>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-5" style="margin-right: 50px;"></div>
+			<div id="loader" class="collapse">
+				<img src="static/spin.gif" alt="">
+			</div>
+			<br>
+		</div>
+
+		{% if notif %}
+		<div class="row">
+			<div class="col-sm-3"></div>
+			<div class="col-sm-6">
+				<div style="text-align: center;" class="alert alert-info alert-dismissable fade in">
+					<a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+					<strong>Info!</strong> {{ notif }}
+				</div>
+			</div>
+		</div>
+		{% endif %}
+		{% if success %}
+		<div class="row">
+			<div class="col-sm-3"></div>
+			<div class="col-sm-6">
+				<div style="text-align: center;" class="alert alert-success alert-dismissable fade in">
+					<a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+					<strong>Success!</strong> {{ success }}
+				</div>
+			</div>
+		</div>
+		{% endif %}
+
+		<div class="row">
+			<div class="container">
+				<a href="#" data-href="http://localhost:5000/create" data-toggle="modal" data-target="#confirm-tambah" class="btn btn-info" role="button">Add</a>
+				<a href="http://localhost:5000/update" data-toggle="collapse" data-target="#loader" class="btn btn-warning" role="button">Update</a>
+				<a href="#" data-href="http://localhost:5000/deleteall" data-toggle="modal" data-target="#confirm-delete-all" class="btn btn-danger" role="button">Delete All</a>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-12">
+				<br>
+				<div class="well">
+					<table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+						<thead>
+							<tr>
+								<th>No</th>
+								<th>ID</th>
+								<th style="width: 600px;">Title</th>
+								<th>Keywords</th>
+								<th style="width: 200px;">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for artikel in container %}
+							<tr height="75px">
+								<td><strong>{{ (summary + 1) - loop.index }}</strong></td>
+								<td><u>{{ artikel.id }}</u></td>
+								<td style="width: 600px;"><i>{{ artikel.judul }}</i></td>
+								<td>
+									<span class="badge"><i>{{ artikel.kunci1 }}</i></span> 
+									<span class="badge"><i>{{ artikel.kunci2 }}</i></span> 
+									<span class="badge"><i>{{ artikel.kunci3 }}</i></span>
+								</td>
+								<td style="width: 200px;">
+									<a target="_blank" href="http://localhost:5000/view/{{artikel.id}}" class="btn btn-info" role="button">view</a>
+									<a href="http://localhost:5000/edit/{{artikel.id}}" class="btn btn-warning" role="button">edit</a>
+									<a href="http://localhost:5000/delete/{{artikel.id}}" class="btn btn-danger" role="button">delete</a>
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+				<br><br><br>
+			</div>
+		</div>
+
+		<div class="modal fade" id="confirm-setting" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title"><strong>Setting</strong></h4>
+					</div>
+					<form action="http://localhost:5000/setting" method="post">
+						<div class="modal-body">
+							<div>
+								<div align="right"><small><i>Contents should be numbers (1-9)</i></small></div>
+								<div class="form-group">
+									<label for="kel">Summary of Groups</label>
+									<input type="text" name="kelompok" maxlength="1" class="form-control" value="{{admin.kelompok}}">
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+							<input class="btn btn-success btn-ok" type="submit" value="Submit">
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="confirm-logout" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title"><strong>Logout</strong></h4>
+					</div>
+					<div class="modal-body">
+						Do you want to out of the session?
+					</div>
+					<div class="modal-footer">
+						<form action="http://localhost:5000/logout">
+							<button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+							<input class="btn btn-warning btn-ok" type="submit" value="Yes">
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="confirm-delete-all" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title"><strong>Delete All</strong></h4>
+					</div>
+					<div class="modal-body">
+						<strong>Do you want to delete all of document?</strong>
+					</div>
+					<div class="modal-footer">
+						<form action="http://localhost:5000/deleteall">
+							<button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+							<input class="btn btn-danger btn-ok" type="submit" value="Yes">
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="confirm-tambah" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<form action="{{ url_for('create') }}" method="post" enctype="multipart/form-data">
+						<div class="modal-header">
+							<h4 class="modal-title"><strong>Add Article</strong></h4>
+						</div>
+						<div class="modal-body">
+							<div>
+								<div align="right"><small><i>Please fill the form (<span style="color: red;">*</span>), not empty</i></small></div>
+								<div class="form-group">
+									<label>ID<span style="color: red;">*</span></label>
+									<input type="text" name="id" maxlength="3" class="form-control">
+								</div>
+								<div class="form-group">
+									<label>Title<span style="color: red;">*</span></label>
+									<input type="text" name="judul" maxlength="200" class="form-control">
+								</div>
+								<div class="form-group">
+									<label>Keywords</label>
+									<div class="row">
+										<span class="col-sm-4">
+											<input type="text" name="kunci1" maxlength="20" class="form-control">
+										</span>
+										<span class="col-sm-4">
+											<input type="text" name="kunci2" maxlength="20" class="form-control">
+										</span>
+										<span class="col-sm-4">
+											<input type="text" name="kunci3" maxlength="20" class="form-control">
+										</span>
+									</div>
+								</div>
+								<div class="form-group">
+									<label >Content<span style="color: red;">*</span></label>
+									<textarea rows="10" name="isi" class="form-control"></textarea> 
+								</div>
+								<div class="form-group">
+									<label>PDF Upload<span style="color: red;">*</span></label>
+									<input type="file" name="file">
+								</div>
+								
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+							<input class="btn btn-success btn-ok" type="submit" value="Submit">
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			$('#confirm-logout').on('show.bs.modal', function(e) {
+				$(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+			});
+			$('#confirm-tambah').on('show.bs.modal', function(e) {
+				$(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+			});
+			$('#confirm-setting').on('show.bs.modal', function(e) {
+				$(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+			});
+		</script>
+		<script>
+			$(document).ready(function() {
+				$('#example').DataTable();
+			} );
+		</script>
+		<script>
+			var elem = document.getElementsByTagName('input')[0];
+
+			if(elem.hasAttribute('required')){
+				window.open('http://www.google.com');
+			}
+		</script>
+	</div>
+</body>
+</html>

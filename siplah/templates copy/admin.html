@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>admin - siplah</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  	<link rel="stylesheet" type="text/css" href="./siplah.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<br>
+	<nav class="container">
+		<div class="col-sm-9">
+		</div>
+		<div class="col-sm-3" style="text-align: right; font-family: courier; font-size: 100%;">
+			<a href="http://localhost:5000/setting">setting</a>
+			<a href="http://localhost:5000/logout">logout</a>
+		</div>
+	</nav>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+				<h3 style="text-align: center;">Semua Artikel</h3>
+			</div>
+		</div>
+		<br>
+		<a href="http://localhost:5000/create" class="btn btn-info" role="button">Tambah</a>
+		<br>
+		<div class="row">
+			<div class="col-sm-12">
+				<br>
+				<table class="table table-striped">
+				    <thead>
+				      <tr>
+				      	<th>No</th>
+				      	<th>ID</th>
+				        <th>Judul Artikel</th>
+				        <th>Kata Kunci</th>
+				        <th class="col-sm-2">Aksi</th>
+				      </tr>
+				    </thead3
+				    <tbody>
+				    {% for artikel in container %}
+				      <tr>
+				      	<td>{{ (summary + 1) - loop.index }}</td>
+				      	<td>{{ artikel.id }}</td>
+				        <td>{{ artikel.judul }}</td>
+				        <td>{{ artikel.kunci1 }}, {{ artikel.kunci2 }}, {{ artikel.kunci3 }}</td>
+				        <td class="col-sm-3">
+				        	<a href="http://localhost:5000/view/{{artikel.id}}" class="btn btn-info" role="button" target="_blank">view</a>
+							<a href="http://localhost:5000/edit/{{artikel.id}}" class="btn btn-warning" role="button">edit</a>
+							<a href="#" data-href="http://localhost:5000/delete/{{artikel.id}}" data-toggle="modal" data-target="#confirm-delete" class="btn btn-danger" role="button">delete</a>
+				        </td>
+				      </tr>
+				     {% endfor %}
+				    </tbody>
+				  </table>
+			</div>
+		</div>
+
+		<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		    <div class="modal-dialog">
+		        <div class="modal-content">
+		            <div class="modal-header">
+		                Hapus File
+		            </div>
+		            <div class="modal-body">
+		                Apakah anda ingin menghapus artikel ini?
+		            </div>
+		            <div class="modal-footer">
+		                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+		                <a class="btn btn-danger btn-ok">Delete</a>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+
+		<script>
+			$('#confirm-delete').on('show.bs.modal', function(e) {
+			    $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+			});
+		</script>
+
+	</div>
+</body>
+</html>

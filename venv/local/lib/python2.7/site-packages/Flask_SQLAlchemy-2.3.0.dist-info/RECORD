@@ -1,0 +1,14 @@
+Flask_SQLAlchemy-2.3.0.dist-info/DESCRIPTION.rst,sha256=Mp4bpckSjf082xflOARFwzWLTnUszq7JxcY0dR9vD2w,273
+Flask_SQLAlchemy-2.3.0.dist-info/LICENSE.txt,sha256=2smrI3hNiP6c5TcX0fa6fqODgsdJVLC166X0kVxei9A,1457
+Flask_SQLAlchemy-2.3.0.dist-info/METADATA,sha256=AIFx9_VO0f-WUWfOGygxYuIlXbJ0oapOIYQ0H4_Y4Mk,1384
+Flask_SQLAlchemy-2.3.0.dist-info/RECORD,,
+Flask_SQLAlchemy-2.3.0.dist-info/WHEEL,sha256=kdsN-5OJAZIiHN-iO4Rhl82KyS0bDWf4uBwMbkNafr8,110
+Flask_SQLAlchemy-2.3.0.dist-info/metadata.json,sha256=tovvLBi0lo_FSUg7R1_qyXrB4bDuTeDYW6wtTmTmfIA,1257
+Flask_SQLAlchemy-2.3.0.dist-info/top_level.txt,sha256=w2K4fNNoTh4HItoFfz2FRQShSeLcvHYrzU_sZov21QU,17
+flask_sqlalchemy/__init__.py,sha256=TmFrGKZJn_XisbirQqRz9zJfJRLfwMzqZbiPfbAPatM,35455
+flask_sqlalchemy/_compat.py,sha256=6rFcZZ3kxvyeJUC_FyB62mG1saNU8iQthzWHLDcKPVE,1057
+flask_sqlalchemy/model.py,sha256=7oT85MfvwZQBd0N0Um7qxJfboZsUPYslHJJfK6zHPWA,3775
+Flask_SQLAlchemy-2.3.0.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
+flask_sqlalchemy/model.pyc,,
+flask_sqlalchemy/__init__.pyc,,
+flask_sqlalchemy/_compat.pyc,,

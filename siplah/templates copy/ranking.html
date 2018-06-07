@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>vsm results - siplah</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  	<link rel="stylesheet" type="text/css" href="static/default.css">
+  	<link rel="stylesheet" type="text/css" href="static/tabel.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<script>
+	window.onload = function () {
+
+	var chart = new CanvasJS.Chart("chartContainer", {
+		animationEnabled: true,
+
+		title:{
+			text:""
+		},
+		axisX:{
+			interval: 1
+		},
+		axisY2:{
+			interlacedColor: "rgba(1,77,101,.2)",
+			gridColor: "rgba(1,77,101,.1)",
+			title: "Nilai VSM tiap Dokumen"
+		},
+		data: [{
+			type: "bar",
+			name: "companies",
+			axisYType: "secondary",
+			color: "#014D65",
+			dataPoints: [
+			{% for rank in ranking %}
+				{ y: {{ rank }}, label: "Doc:{{ loop.index }}" },
+			{% endfor %}
+			]
+		}]
+	});
+	chart.render();
+
+	var chart2 = new CanvasJS.Chart("chartContainer2", {
+		animationEnabled: true,
+
+		title:{
+			text:""
+		},
+		axisX:{
+			interval: 1
+		},
+		axisY2:{
+			interlacedColor: "rgba(1,77,101,.2)",
+			gridColor: "rgba(1,77,101,.1)",
+			title: ""
+		},
+		data: [{
+			type: "bar",
+			name: "companies",
+			axisYType: "secondary",
+			color: "#014D65",
+			dataPoints: [
+			{% for i, view in view_ranking.iteritems()|reverse %}
+				{ y: {{ i }}, label: "ID:{{ view }}" },
+			{% endfor %}
+			]
+		}]
+	});
+	chart2.render();
+
+	var chart3 = new CanvasJS.Chart("chartContainer3", {
+		exportEnabled: true,
+		animationEnabled: true,
+		title:{
+			text: "Hasil Pembagian Kelompok"
+		},
+		legend:{
+			cursor: "pointer",
+			itemclick: explodePie
+		},
+		data: [{
+			type: "pie",
+			showInLegend: true,
+			toolTipContent: "{name}: <strong>{y}%</strong>",
+			indexLabel: "{name} - {y}%",
+			dataPoints: [
+			{% for group in chart_group %}
+				{ y: {{ '%0.0f' % ((group / sum_chart) * 100)|float }}, name: "Kelompok:{{ loop.index }}" },
+			{% endfor %}
+			]
+		}]
+	});
+	chart3.render();
+	}
+
+	function explodePie (e) {
+		if(typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
+			e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
+		} else {
+			e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
+		}
+		e.chart3.render();
+
+		}
+	</script>
+</head>
+<body>
+	<br>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-3" style="border: 1px solid grey">
+				<br>
+				<p style="font-family: courier; text-align: center; font-size: 200%;"><a href="http://localhost:5000/">SIPLAH</a></p>
+				<br>
+				{% for name in name_final %}
+					<p style="text-align: center;">
+						<a href="http://localhost:5000/groups/{{ loop.index }}" target="_blank">
+							{% for n in name %}
+							{{ n }}
+							{% if not loop.last %}
+		        			|
+							{% endif %}
+							{% endfor %}
+						</a>
+					</p>
+				{% endfor %}
+			</div>
+			<div class="col-sm-6">
+				<br>
+				<form action="{{ url_for('ranking') }}" method="post">
+				  <div class="input-group">
+				    <input type="text" class="form-control" placeholder="Search" name="query" value="{{ query_req }}">
+				    <div class="input-group-btn">
+				      <button data-toggle="collapse" data-target="#loader" class="btn btn-default" type="submit">
+				        <i class="glyphicon glyphicon-search"></i>
+				      </button>
+				    </div>
+				  </div>
+				</form>
+				<div style="text-align: right; font-size: 75%;">
+					<i>hasil pencarian {{ rank }} dari {{ jumlah }} artikel ilmiah dengan {{ sum_kel }} kelompok</i>
+				</div>
+
+				<div class="row">
+					<br>
+					<div class="col-sm-5"></div>
+					<div id="loader" class="collapse">
+						<img src="static/spin.gif" alt="">
+					</div>
+				</div>
+
+				{% for i, view in view_ranking.iteritems() %}
+						<h3 style=" overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; "><a href="/static/uploads/{{ container.query.filter_by(id=view).first().file }}" target="_blank">{{ container.query.filter_by(id=view).first().judul }}</a></h3>
+						<div maxlength="50" align="justify" style=" overflow: hidden; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; ">
+						{{ container.query.filter_by(id=view).first().isi }}</div>
+						<br>
+				{% endfor %}
+
+				<br>
+
+				<h2>Modal Example</h2>
+				  <!-- Trigger the modal with a button -->
+				  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
+
+				  <!-- Modal -->
+				  <div class="modal fade" id="myModal" role="dialog">
+				    <div class="modal-dialog">
+
+				      <!-- Modal content-->
+				      <div class="modal-content">
+				        <div class="modal-header">
+				          <button type="button" class="close" data-dismiss="modal">&times;</button>
+				          <h4 class="modal-title">Modal Header</h4>
+				        </div>
+				        <div class="modal-body">
+
+				        	<div>
+					  <h2>Tahapan Proses Metode</h2>
+					  <ul class="nav nav-tabs">
+					    <li class="active"><a data-toggle="tab" href="#frek">Frekuensi Kata</a></li>
+					    <li><a data-toggle="tab" href="#bobot">Pembobotan Kata</a></li>
+					    <li><a data-toggle="tab" href="#vsm">VSM</a></li>
+					    <li><a data-toggle="tab" href="#kmeans">K-MEANS</a></li>
+					  </ul>
+
+					  <div class="tab-content">
+					    <div id="frek" class="tab-pane fade in active">
+					      <h3>Frekuensi Kata</h3>
+					      	<p>Query</p>
+					      	<p>
+							{% for q in query %}
+							    {{ loop.index }}<span>. </span>{{ q }}<br>
+							{% endfor %}
+							</p>
+
+							<br>
+
+							<p>List Kata Koleksi</p>
+
+							<div class="outer">
+							    <div class="inner">
+							        <table>
+							            <tr>
+							                <th>Kata :</th>
+							                {% for koleksi in koleksi %}
+							                	<td>{{ koleksi }}</td>
+							                {% endfor %}
+							            </tr>
+							        </table>
+							    </div>
+							</div>
+
+							<br>
+
+							<p>Frekuensi Kata pada Query</p>
+
+							<div class="outer">
+							    <div class="inner">
+							        <table>
+							            <tr>
+							                <th>Kata :</th>
+							                {% for q in query %}
+							                	<td><strong>{{ q }}</strong></td>
+							                {% endfor %}
+							            </tr>
+							            <tr>
+							                <th>Frekuensi :</th>
+							                {% for doc in bobot_q %}
+							                {% if doc != 0 %}
+							                <td>{{ doc }}</td>
+							                {% endif %}
+							                {% endfor %}
+							            </tr>
+							        </table>
+							    </div>
+							</div>
+
+							<br>
+
+							<p>Frekuensi Kata pada Dokumen</p>
+
+							<div class="outer">
+							    <div class="inner">
+							        <table>
+							            <tr>
+							                <th>Kata :</th>
+							                {% for koleksi in koleksi %}
+							                	<td><strong>{{ koleksi }}</strong></td>
+							                {% endfor %}
+							            </tr>
+							            {% for bobot_doc in bobot_doc %}
+							            <tr>
+							                <th>Doc ke: {{ loop.index }}</th>
+							                {% for doc in bobot_doc %}
+							                <td>{{ doc }}</td>
+							                {% endfor %}
+							            </tr>
+							            {% endfor %}
+							        </table>
+							    </div>
+							</div>
+
+					    </div>
+
+					    <div id="bobot" class="tab-pane fade">
+					      <h3>Pembobotan Kata</h3>
+					      	<p>Query</p>
+					      	<p>
+							{% for q in query %}
+							    {{ loop.index }}<span>. </span>{{ q }}<br>
+							{% endfor %}
+							</p>
+
+							<br>
+
+							<p>Bobot IDF</p>
+
+							<div class="outer">
+							    <div class="inner">
+							        <table>
+							            <tr>
+							                <th>Kata :</th>
+							                {% for koleksi in koleksi %}
+							                	<td><strong>{{ koleksi }}</strong></td>
+							                {% endfor %}
+							            </tr>
+							            <tr>
+							                <th>IDF :</th>
+							                {% for doc in bobot_kata %}
+							                <td>{{ doc }}</td>
+							                {% endfor %}
+							            </tr>
+							        </table>
+							    </div>
+							</div>
+
+							<br>
+
+							<p>Bobot Kata pada Query</p>
+
+							<div class="outer">
+							    <div class="inner">
+							        <table>
+							            <tr>
+							                <th>Kata :</th>
+							                {% for q in query %}
+							                	<td><strong>{{ q }}</strong></td>
+							                {% endfor %}
+							            </tr>
+							            <tr>
+							                <th>Bobot :</th>
+							                {% for doc in bobot_kata_q %}
+							                {% if doc != 0 %}
+							                <td>{{ doc }}</td>
+							                {% endif %}
+							                {% endfor %}
+							            </tr>
+							        </table>
+							    </div>
+							</div>
+
+							<br>
+
+							<p>Bobot Kata pada Dokumen</p>
+
+							<div class="outer">
+							    <div class="inner">
+							        <table>
+							            <tr>
+							                <th>Kata :</th>
+							                {% for koleksi in koleksi %}
+							                	<td><strong>{{ koleksi }}</strong></td>
+							                {% endfor %}
+							            </tr>
+							            {% for dokumen in bobot_kata_doc %}
+							            <tr>
+							                <th>Dok ke: {{ loop.index }}</th>
+							                {% for doc in dokumen %}
+							                <td>{{ doc }}</td>
+							                {% endfor %}
+							            </tr>
+							            {% endfor %}
+							        </table>
+							    </div>
+							</div>
+
+							<br>
+
+					    </div>
+
+					    <div id="vsm" class="tab-pane fade">
+					      <h3>VSM</h3>
+					      <p>Query</p>
+					      	<p>
+							{% for q in query %}
+							    {{ loop.index }}<span>. </span>{{ q }}<br>
+							{% endfor %}
+							</p>
+
+					      <p>Hasil Perangkingan yang ter-retrieve</p>
+
+							<div class="outer">
+							    <div class="inner">
+							        <table>
+							            <tr>
+							                <th>ID Dok :</th>
+							                {% for i, view in view_ranking.iteritems() %}
+							                <td><strong>{{ view }}</strong></td>
+							                {% endfor %}
+							            </tr>
+							            <tr>
+							                <th>Nilai VSM :</th>
+							                {% for i, view in view_ranking.iteritems() %}
+							                <td>{{ '%0.8f' % i|float }}</td>
+							                {% endfor %}
+							            </tr>
+							            <tr>
+							                <th>Rank :</th>
+							                {% for i, view in view_ranking.iteritems() %}
+							                <td><strong>{{ loop.index }}</strong></td>
+							                {% endfor %}
+							            </tr>
+							        </table>
+							    </div>
+							</div>
+
+							<br>
+
+							<div id="chartContainer2" style="height: 300px; width: 100%;"></div>
+							<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+							<br><br><br><br><br><br>
+
+							<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+							<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+							<br>
+					    </div>
+					    <div id="kmeans" class="tab-pane fade">
+					      <h3>K-MEANS</h3>
+					      <p>Query</p>
+					      	<p>
+							{% for q in query %}
+							    {{ loop.index }}<span>. </span>{{ q }}<br>
+							{% endfor %}
+							</p>
+
+							<br>
+
+					      <p>nilai centroid tiap iterasi</p>
+
+							<div class="outer">
+							    <div class="inner">
+							        <table>
+							            <tr>
+							                <th>centroid ke:</th>
+							                {% for x in range(sum_kel) %}
+							                	<td><strong>{{ loop.index }}</strong></td>
+							                {% endfor %}
+							            </tr>
+							            {% for seq in catatan_bobot %}
+							            <tr>
+							                <th>iterasi ke: {{ loop.index }}</th>
+							                {% for centroid in seq %}
+							                <td>{{ '%0.8f' % centroid|float }}</td>
+							                {% endfor %}
+							            </tr>
+							            {% endfor %}
+							        </table>
+							    </div>
+							</div>
+
+							<br>
+
+							<p>posisi dokumen pada kelompok tiap iterasi</p>
+
+							<div class="outer">
+							    <div class="inner">
+							        <table>
+							            <tr>
+							                <th>Dok ke:</th>
+							                {% for i, view in view_ranking.iteritems() %}
+							                	<td><strong>{{ loop.index }}</strong></td>
+							                {% endfor %}
+							            </tr>
+							            {% for seq in catatan_grup %}
+							            <tr>
+							                <th>iterasi ke: {{ loop.index }}</th>
+							                {% for nilai in seq %}
+							                	<td>
+							                	{% for n in nilai %}
+							                	{% if n == 1 %}
+							                		kel:{{ loop.index }}
+							                	{% endif %}
+							                	{% endfor %}
+							                	</td>
+							                {% endfor %}
+							            </tr>
+							            {% endfor %}
+							        </table>
+							    </div>
+							</div>
+
+							<br>
+
+							<p>Hasil Pengelompokkan dokumen</p>
+
+							<div class="outer">
+							    <div class="inner">
+							        <table>
+							            <tr>
+							                <th>ID Dok :</th>
+							                {% for i, view in final_result.iteritems() %}
+							                <td><strong>{{ i }}</strong></td>
+							                {% endfor %}
+							            </tr>
+							            <tr>
+							                <th>Nilai VSM :</th>
+							                {% for i, view in final_result.iteritems() %}
+							                <td>{{ view }}</td>
+							                {% endfor %}
+							            </tr>
+							        </table>
+							    </div>
+							</div>
+
+							<br>
+
+							<div id="chartContainer3" style="height: 300px; width: 100%;"></div>
+							<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+					    </div>
+					  </div>
+					</div>
+
+				        </div>
+				        <div class="modal-footer">
+				          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				        </div>
+				      </div>
+
+				    </div>
+				  </div>
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>
