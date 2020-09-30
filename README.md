@@ -9,3 +9,5 @@ Cara Mengaktifkan Program SIPLAH (menggunakan ubuntu):
 6. ketik "python siplah/app.py"
 7. buka browser, kunjungi "localhost:5000/"
 8. program telah aktif. 
+=================================
+http://eprints.undip.ac.id/65830/
