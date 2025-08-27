@@ -1,0 +1,81 @@
+{
+  "id": "f5f9bdb5-2fd0-4472-a559-f92ca3a2711f",
+  "version": "2.0",
+  "name": "SIPLAH-test-search",
+  "url": "https://congenial-funicular-jjgr5jw7q6qwcqx-5000.app.github.dev",
+  "tests": [{
+    "id": "659b7e47-2de7-4a40-8b1a-9a26d2b4da57",
+    "name": "SIPLAH-test-search",
+    "commands": [{
+      "id": "bb89baab-f319-4e26-b383-684c1b74294a",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "75ee05a1-5aea-47bd-b1a6-ee96cd13a9d5",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "903x799",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "36f5092f-b0d4-420c-aedc-7cf2d0de1370",
+      "comment": "",
+      "command": "click",
+      "target": "name=query",
+      "targets": [
+        ["name=query", "name"],
+        ["css=.form-control:nth-child(1)", "css:finder"],
+        ["xpath=//input[@name='query']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "a53379a5-f2b7-495c-a1a8-8d4427e3d034",
+      "comment": "",
+      "command": "type",
+      "target": "name=query",
+      "targets": [
+        ["name=query", "name"],
+        ["css=.form-control:nth-child(1)", "css:finder"],
+        ["xpath=//input[@name='query']", "xpath:attributes"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "sistem"
+    }, {
+      "id": "4dbdc4b8-9e40-46d0-aae3-d89ee8caf17f",
+      "comment": "",
+      "command": "click",
+      "target": "css=.input-group-btn > .btn",
+      "targets": [
+        ["css=.input-group-btn > .btn", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "232ab732-43d4-4ead-b58a-450cc0e9fe2f",
+      "comment": "",
+      "command": "click",
+      "target": "css=.navbar-brand i",
+      "targets": [
+        ["css=.navbar-brand i", "css:finder"],
+        ["xpath=//i", "xpath:position"],
+        ["xpath=//i[contains(.,'[SIPLAH]')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "c289fad4-4f7e-492e-b4a0-8f260b4cb22e",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["659b7e47-2de7-4a40-8b1a-9a26d2b4da57"]
+  }],
+  "urls": ["https://congenial-funicular-jjgr5jw7q6qwcqx-5000.app.github.dev/"],
+  "plugins": []
+}

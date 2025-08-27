@@ -1,0 +1,160 @@
+{
+  "id": "41dafae4-3968-413c-aeb7-65feb88f8601",
+  "version": "2.0",
+  "name": "SIPLAH-test-login",
+  "url": "https://congenial-funicular-jjgr5jw7q6qwcqx-5000.app.github.dev",
+  "tests": [{
+    "id": "36b7ee1e-ddc9-4afd-a4ea-eed143ec57e6",
+    "name": "SIPLAH-test-login",
+    "commands": [{
+      "id": "b18bbe62-daaf-41da-a558-3062994c8ee2",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "5bd9d56b-8b15-4862-9d46-cd2d790eed67",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "903x799",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2505925f-640f-4512-89ed-8f0277be6ccd",
+      "comment": "",
+      "command": "click",
+      "target": "css=.glyphicon-exclamation-sign",
+      "targets": [
+        ["css=.glyphicon-exclamation-sign", "css:finder"],
+        ["xpath=//span", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "45819a74-80f9-4f19-b0fb-900f90fdccad",
+      "comment": "",
+      "command": "click",
+      "target": "css=#myAbout .btn",
+      "targets": [
+        ["css=#myAbout .btn", "css:finder"],
+        ["xpath=(//button[@type='button'])[5]", "xpath:attributes"],
+        ["xpath=//div[@id='myAbout']/div/div/div[3]/button", "xpath:idRelative"],
+        ["xpath=//div[4]/div/div/div[3]/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "7bd97f2a-1eb0-4fa1-a37d-16d874598e5a",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Login",
+      "targets": [
+        ["linkText=Login", "linkText"],
+        ["css=li:nth-child(2) > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Login')]", "xpath:link"],
+        ["xpath=(//a[contains(@href, '#')])[2]", "xpath:href"],
+        ["xpath=//li[2]/a", "xpath:position"],
+        ["xpath=//a[contains(.,' Login')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "1859ebc2-4b7b-432d-bd35-eeefc11df2c6",
+      "comment": "",
+      "command": "click",
+      "target": "name=username",
+      "targets": [
+        ["name=username", "name"],
+        ["css=.form-group:nth-child(1) > .form-control", "css:finder"],
+        ["xpath=//input[@name='username']", "xpath:attributes"],
+        ["xpath=//div[@id='myLogin']/div/div/div[2]/div/form/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/div/div[2]/div/form/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "2a55707a-be1d-433b-8a56-c1ba53521451",
+      "comment": "",
+      "command": "type",
+      "target": "name=username",
+      "targets": [
+        ["name=username", "name"],
+        ["css=.form-group:nth-child(1) > .form-control", "css:finder"],
+        ["xpath=//input[@name='username']", "xpath:attributes"],
+        ["xpath=//div[@id='myLogin']/div/div/div[2]/div/form/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/div/div[2]/div/form/div/input", "xpath:position"]
+      ],
+      "value": "a710230091"
+    }, {
+      "id": "fc776815-b810-43cb-8532-a061633d0884",
+      "comment": "",
+      "command": "click",
+      "target": "name=password",
+      "targets": [
+        ["name=password", "name"],
+        ["css=.form-group:nth-child(2) > .form-control", "css:finder"],
+        ["xpath=//input[@name='password']", "xpath:attributes"],
+        ["xpath=//div[@id='myLogin']/div/div/div[2]/div/form/div[2]/input", "xpath:idRelative"],
+        ["xpath=//div[2]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "23cb01f4-e315-4dd3-89b9-393b7e542d93",
+      "comment": "",
+      "command": "type",
+      "target": "name=password",
+      "targets": [
+        ["name=password", "name"],
+        ["css=.form-group:nth-child(2) > .form-control", "css:finder"],
+        ["xpath=//input[@name='password']", "xpath:attributes"],
+        ["xpath=//div[@id='myLogin']/div/div/div[2]/div/form/div[2]/input", "xpath:idRelative"],
+        ["xpath=//div[2]/input", "xpath:position"]
+      ],
+      "value": "hamnuri"
+    }, {
+      "id": "5a5e6901-cf2e-4f06-b4e3-b40b5e006fa4",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn-success",
+      "targets": [
+        ["css=.btn-success", "css:finder"],
+        ["xpath=//input[@value='Login']", "xpath:attributes"],
+        ["xpath=//div[@id='myLogin']/div/div/div[3]/input", "xpath:idRelative"],
+        ["xpath=//div[3]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "edbd73b2-6852-4280-9ef3-0b61f24cab39",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn-success",
+      "targets": [
+        ["css=.btn-success", "css:finder"],
+        ["xpath=//input[@value='Login']", "xpath:attributes"],
+        ["xpath=//div[@id='myLogin']/div/div/div[3]/input", "xpath:idRelative"],
+        ["xpath=//div[3]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "c6e79a1c-4a71-495a-b278-9fe7e071a954",
+      "comment": "",
+      "command": "click",
+      "target": "css=#myLogin .btn-default",
+      "targets": [
+        ["css=#myLogin .btn-default", "css:finder"],
+        ["xpath=(//button[@type='button'])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='myLogin']/div/div/div[3]/button", "xpath:idRelative"],
+        ["xpath=//div[3]/button", "xpath:position"],
+        ["xpath=//button[contains(.,'Close')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "5a50ed52-0893-47ba-b5d5-34e27bfd3e0d",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["36b7ee1e-ddc9-4afd-a4ea-eed143ec57e6"]
+  }],
+  "urls": ["https://congenial-funicular-jjgr5jw7q6qwcqx-5000.app.github.dev/"],
+  "plugins": []
+}

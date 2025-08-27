@@ -1,0 +1,4 @@
+Analisis:
+
+Berdasarkan hasil evaluasi usability yang dilakukan oleh satu orang responden menggunakan System Usability Scale (SUS), diperoleh total skor sebesar 25, yang setelah dikalikan dengan faktor 2,5 menghasilkan SUS Score: 62,5 (skor masih di atas rata-rata minimal (50)).
+Menurut standar interpretasi skala SUS, skor 62,5 termasuk dalam kategori "OK (C)", yang berarti sistem bisa digunakan, namun pengalaman pengguna masih belum memuaskan dan belum optimal, sehingga perlu adanya peningkatan dan perbaikan.

@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 from preproses import PreProses
 from ranking import Ranking
 from kelompok import Kelompok
